@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+
+        <title>IOT DASHBOARD</title>
+
+        <link rel="stylesheet" href="css/styles.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+        <!-- Bootstrap Font Icon CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    </head>
+
+    <body>
+        <!-- Blovk objet Num 1 -->
+        <div class="container ">
+            <div class="row primary justify-content-center m-4 " id="date">
+                Date
+            </div>
+            <div class="row justify-content-center bg-dark shadow-lg gx-2 ">
+                <div class="col-4 shadow-lg ">
+                    <div class="row  bg-dark text-white">
+                        <span class="bi bi-thermometer-sun shadow-lg  border-secondary border-bottom rounded-bottom">
+                            Temperature
+                        </span>
+                    </div>
+                    <div class="row bg-dark text-white  p-2 pb-5 ">
+                        <div class="col-2" id="temperature"></div>
+                        <div class="col-2">&#x2103;</div>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary btn-sm">Voir plus</button>
+                    </div>
+                </div>
+                <div class="col-4 shadow-lg">
+                    <div class="row  bg-dark text-white">
+                        <span class="bi bi-droplet  border-secondary border-bottom rounded-bottom">
+                            Humidite
+                        </span>
+                    </div>
+                    <div class="row bg-dark text-white   p-2 pb-5 ">
+                        <div class="col-2" id="humidite"></div>
+                        <div class="col-2">g/m<sup>3</sup></div>
+                    </div>
+                    <div class="row bg-dark justify-content-center">
+                        <button type="button" class="btn btn-primary btn-sm"> Voir plus</button>
+                    </div>
+                </div>
+            </div>
+        <!-- Blovk objet Num 2 -->
+        <div class="container ">
+            <div class="row primary justify-content-center m-4 " id="nom">
+              Nom
+            </div>
+            <div class="row justify-content-center bg-dark shadow-lg gx-2 ">
+                <div class="col-4 shadow-lg ">
+                    <div class="row  bg-dark text-white">
+                        <span class="bi  bi-hand-index-thumb shadow-lg  border-secondary border-bottom rounded-bottom">
+                            Touch
+                        </span>
+                    </div>
+                    <div class="row bg-dark text-white  p-2 pb-5 ">
+                        <div class="col-2" id="touch"></div>
+                        <div class="col-2"></div>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn btn-primary btn-sm">Voir plus</button>
+                    </div>
+                </div>
+                <div class="col-4 shadow-lg">
+                    <div class="row  bg-dark text-white">
+                        <span class="bi bi-lightbulb  border-secondary border-bottom rounded-bottom">
+                            Lumiere
+                        </span>
+                    </div>
+                    <div class="row bg-dark text-white   p-2 pb-5 ">
+                        <div class="col-2" id="lumiere"></div>
+                        <div class="col-2"></div>
+                    </div>
+                    <div class="row bg-dark justify-content-center">
+                        <button type="button" class="btn btn-primary btn-sm"> Voir plus</button>
+                    </div>
+                </div>
+            </div>
+            <script>
+
+                function refreshTemp(){
+                    setInterval(function(){
+                        fetch("http://127.0.0.1:8000/humides/").then((response) => {
+                            if(response.ok){
+          
+                              return response.json(); // conversion en objet
+                            }
+                              //console.log(response.text()); 
+                          }).then((objetData) => {
+                              console.log(objetData);
+                              let tempValue = "";
+                              let humValue = "";
+                              let dateValue = "";
+                              objetData.map((values) => {
+                                  tempValue = values.temperature_val;
+                                  humValue = values.humidite_val;
+                                  dateValue = new Date(values.ts * 1000);
+                              });
+                              //temp_tex_val.temperature = tempValue;
+                              document.getElementById("temperature").innerHTML = tempValue;
+                              document.getElementById("humidite").innerHTML = humValue;
+                              document.getElementById("date").innerHTML = dateValue;
+                        });
+                    }, 5000);
+                };
+
+                function refreshTouch(){
+                    setInterval(function(){
+                        fetch("http://127.0.0.1:8000/touchs/").then((response) => {
+                            if(response.ok){
+          
+                              return response.json(); // conversion en objet
+                            }
+                              //console.log(response.text()); 
+                          }).then((objetData) => {
+                              console.log(objetData);
+                              let nomValue = "";
+                              let touchValue = "";
+                              let lumiereValue = "";
+                              objetData.map((values) => {
+                                nomValue = values.nom;
+                                touchValue = values.touch_val;
+                                lumiereValue = values.lumiere_val;
+                              });
+                              //temp_tex_val.temperature = tempValue;
+                              document.getElementById("touch").innerHTML = touchValue;
+                              document.getElementById("lumiere").innerHTML = lumiereValue;
+                              document.getElementById("nom").innerHTML = nomValue;
+                        });
+                    }, 5000);
+                };
+
+                refreshTouch();
+                //refreshTemp();            
+            </script>
+    </body>
+</html>

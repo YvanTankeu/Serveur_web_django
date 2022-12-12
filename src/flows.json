@@ -1,0 +1,283 @@
+[
+    {
+        "id": "65b7351eddc5bb2d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a614f6aeea667ee7",
+        "type": "mqtt in",
+        "z": "65b7351eddc5bb2d",
+        "name": "Plante_input",
+        "topic": "home/HumTemp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "2937d5c524212b8d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 330,
+        "y": 280,
+        "wires": [
+            [
+                "42592c0d992a3c74",
+                "9da4d6129d6fc45c"
+            ]
+        ]
+    },
+    {
+        "id": "b0f805c0a398ecf9",
+        "type": "postgresql",
+        "z": "65b7351eddc5bb2d",
+        "name": "PostgreSql DB",
+        "query": "INSERT INTO public.\"Humidite_plante\"  VALUES (DEFAULT, $1, $2, $3);",
+        "postgreSQLConfig": "8b05c90521f20cd3",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 840,
+        "y": 200,
+        "wires": [
+            [
+                "fbe19c2b5dbefb5f"
+            ]
+        ]
+    },
+    {
+        "id": "42592c0d992a3c74",
+        "type": "function",
+        "z": "65b7351eddc5bb2d",
+        "name": "select data from playload to load on msg.params",
+        "func": "let ts = msg.payload.ts;\nlet temp = msg.payload.values.Temperature;\nlet hum = msg.payload.values.Humidite;\n\nmsg.params = [ts, temp, hum];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 280,
+        "wires": [
+            [
+                "b0f805c0a398ecf9",
+                "f8943dd80cfb3b16"
+            ]
+        ]
+    },
+    {
+        "id": "bfbc9a7c130d42b6",
+        "type": "mqtt in",
+        "z": "65b7351eddc5bb2d",
+        "name": "touch_input",
+        "topic": "home/touch",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "2937d5c524212b8d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 500,
+        "wires": [
+            [
+                "a6d996cbf67e6bdb",
+                "0e55606187bf2f9c"
+            ]
+        ]
+    },
+    {
+        "id": "a6d996cbf67e6bdb",
+        "type": "function",
+        "z": "65b7351eddc5bb2d",
+        "name": "select data from playload to load on msg.params",
+        "func": "let nom = \"Touch Objet\";\nlet touch = msg.payload.values.Touch;\nlet lumiere = msg.payload.values.Lumiere;\n\nmsg.params = [nom, touch, lumiere];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 500,
+        "wires": [
+            [
+                "76629054ce467979",
+                "23c1a996b2307075"
+            ]
+        ]
+    },
+    {
+        "id": "76629054ce467979",
+        "type": "postgresql",
+        "z": "65b7351eddc5bb2d",
+        "name": "PostgreSql DB",
+        "query": "INSERT INTO public.\"Humidite_touch\"  VALUES (DEFAULT, $1, $2, $3);",
+        "postgreSQLConfig": "8b05c90521f20cd3",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 840,
+        "y": 420,
+        "wires": [
+            [
+                "8026d23159ba517e"
+            ]
+        ]
+    },
+    {
+        "id": "23c1a996b2307075",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug before db",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "params",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "8026d23159ba517e",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug after db",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "f8943dd80cfb3b16",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug before db",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "params",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "fbe19c2b5dbefb5f",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug after db",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "0e55606187bf2f9c",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "9da4d6129d6fc45c",
+        "type": "debug",
+        "z": "65b7351eddc5bb2d",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2937d5c524212b8d",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.2.32",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "8b05c90521f20cd3",
+        "type": "postgreSQLConfig",
+        "name": "iot",
+        "host": "192.168.2.30",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "Humid",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "admin",
+        "passwordFieldType": "str"
+    }
+]
